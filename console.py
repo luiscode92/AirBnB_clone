@@ -2,7 +2,7 @@
 """ """
 
 import cmd
-from models import storage
+from models import FileStorage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -13,6 +13,12 @@ class HBNBCommand(cmd.Cmd):
     intro = 'Hola como estas linda, en que te puedo ayudar?\n'
     prompt = '(hbnb) '
 
+    classes = ["BaseModel", "User", "State", "City", "Amenity", "Place",
+               "Review"]
+
+    #functions = ["all", "destroy", "update", "show", "create", "count"]
+
+    
     def emptyline(self):
         """
         Method to handle an empy line
@@ -58,9 +64,19 @@ class HBNBCommand(cmd.Cmd):
             return
 
         arg = args.split()
-        if args[0] not in self.classes:
+        if arg[0] not in self.classes:
             print("** class doesn't exist **")
-        elif len(args) < 
+        elif len(arg) < 2:
+            print("** instance id missing **")
+        else:
+            try:
+                storage = FileStorage()
+                key = arg[0] + '.' + arg[1]
+                print(storage.all()[key])
+            except KeyError:
+                print('** no instance found **')
+                
+
 
 
 
