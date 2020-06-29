@@ -59,7 +59,7 @@ class BaseModel:
         """
         returns a dictionary containing all keys/values of the instance:
         """
-        dict_repre = self.__dict__
+        dict_repre = self.__dict__.copy()
         dict_repre['__class__'] = self.__class__.__name__
         dict_repre["created_at"] = dict_repre['created_at'].isoformat()
         dict_repre['updated_at'] = dict_repre['updated_at'].isoformat()

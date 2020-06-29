@@ -2,7 +2,10 @@
 """ """
 
 import cmd
-from models import FileStorage
+import string
+from models import storage
+from models.base_model import BaseModel
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
@@ -16,9 +19,6 @@ class HBNBCommand(cmd.Cmd):
     classes = ["BaseModel", "User", "State", "City", "Amenity", "Place",
                "Review"]
 
-    #functions = ["all", "destroy", "update", "show", "create", "count"]
-
-    
     def emptyline(self):
         """
         Method to handle an empy line
@@ -49,9 +49,10 @@ class HBNBCommand(cmd.Cmd):
             return
         arg = args.split()
         try:
-            new = eval(arg[0] + '()')
-            print(new.id)
-            new.save()
+            new = eval(arg[0])
+            model = new()
+            print(model.id)
+            model.save()
         except:
             print("** class doesn't exist **")
 
@@ -59,6 +60,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Print and instance based on the class name and id
         """
+
         if not args:
             print('** class name missing **')
             return
@@ -70,48 +72,129 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
         else:
             try:
-                storage = FileStorage()
-                key = arg[0] + '.' + arg[1]
-                print(storage.all()[key])
+                for key, value in storage.all().items():
+                    if key == "{}.{}".format(arg[0], arg[1]):
+                        print(value)
+                        return
             except KeyError:
                 print('** no instance found **')
-                
-
-
-
-
-
-
 
     def do_destroy(self, args):
         """
 
         """
-        classes = ['BaseModel']
+
         commands = args.split()
         lenght = len(commands)
 
         if args == "":
             print("** class name missing **")
-
-        if commands[0] not in classes:
+            return
+        elif commands[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
-        
-        if lenght == 1:
+            return
+        elif lenght == 1:
             print("** instance id missing **")
-
-        obj_dict = storage.all()
-        for key, value in obj_dict.items():
-            if "{}.{}".format(commands[0], commands[1]) == key:
-                del obj_dict[key]
-                storage.save()
-                return
+            return
+        else:
+            obj_dict = storage.all()
+            for key, value in obj_dict.items():
+                if "{}.{}".format(commands[0], commands[1]) == key:
+                    del obj_dict[key]
+                    storage.save()
+                    return
         print("** no instance found **")
 
     def do_all(self, args):
         """
 
         """
+
+        commands = args.split()
+        lenght = len(commands)
+        obj_list = []
+        obj_dict = storage.all()
+
+        if lenght == 0:
+            for key, value in obj_dict.items():
+                obj_list.append(str(value))
+            print(obj_list)
+
+        elif commands[0] in HBNBCommand.classes:
+            for key, value in obj_dict.items():
+                if commands[0] in key:
+                    obj_list.append(str(value))
+            print(obj_list)
+
+        else:
+            print("** class doesn't exist **")
+
+    def do_update(self, args):
+        """
+        """
+
+        commands = args.split()
+        lenght = len(commands)
+        flag = 1
+
+        if args == "":
+            print("** class name missing **")
+            return
+        elif commands[0] not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+        elif lenght == 1:
+            print("** instance id missing **")
+            return
+        else:
+            for key, value in storage.all().items():
+                if "{}.{}".format(commands[0], commands[1]) == key:
+                    flag = 0
+        if flag:
+            print("** no instance found **")
+            return
+        elif lenght == 2:
+            print("** attribute name missing **")
+            return
+        elif lenght == 3:
+            print("** value missing **")
+            return
+        else:
+            for key, value in storage.all().items():
+                if "{}.{}".format(commands[0], commands[1]) == key:
+                    if checkInt(commands[3]):
+                        setattr(value, commands[2],
+                                int(commands[3].strip('"')))
+                    elif checkFloat(commands[3]):
+                        setattr(value, commands[2],
+                                float(commands[3].strip('"')))
+                    else:
+                        setattr(value, commands[2], commands[3].strip('"'))
+        storage.save()
+
+
+def checkInt(command):
+    """
+    Checks if a string is an Integer
+    """
+
+    try:
+        int(command.strip('"'))
+        return 1
+    except:
+        return 0
+
+
+def checkFloat(command):
+    """
+    Checks if a string is a Float
+    """
+
+    try:
+        float(command.strip('"'))
+        return 1
+    except:
+        return 0
 
 
 if __name__ == '__main__':
