@@ -6,6 +6,8 @@ import string
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
+from models.city import City
+from models.state import State
 
 
 class HBNBCommand(cmd.Cmd):
@@ -40,6 +42,22 @@ class HBNBCommand(cmd.Cmd):
 
         return True
 
+    def default(self, args):
+        commands = args.split('.')
+        try:
+            if commands[1] == 'all()':
+                self.do_all(commands[0])
+            elif commands[1] == 'count()':
+                self.count(commands[0])
+            elif 'show(' in commands[1]:
+                params = commands[1].split('(')
+                self.do_show(commands[0] + ' ' + params[1].split('"')[1])
+            elif 'destroy(' in commands[1]:
+                params = commands[1].split('(')
+                self.do_destroy(commands[0] + ' ' + params[1].split('"')[1])
+        except:
+            pass
+
     def do_create(self, args):
         """
         Create a new instance of clas BaseModel and saves it to the JSON file
@@ -66,18 +84,17 @@ class HBNBCommand(cmd.Cmd):
             return
 
         arg = args.split()
+
         if arg[0] not in self.classes:
             print("** class doesn't exist **")
         elif len(arg) < 2:
             print("** instance id missing **")
         else:
-            try:
-                for key, value in storage.all().items():
-                    if key == "{}.{}".format(arg[0], arg[1]):
-                        print(value)
-                        return
-            except KeyError:
-                print('** no instance found **')
+            for key, value in storage.all().items():
+                if key == "{}.{}".format(arg[0], arg[1]):
+                    print(value)
+                    return
+            print('** no instance found **')
 
     def do_destroy(self, args):
         """
@@ -171,6 +188,19 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         setattr(value, commands[2], commands[3].strip('"'))
         storage.save()
+
+    @staticmethod
+    def count(class_name):
+        """
+        """
+
+        counter = 0
+
+        if class_name in HBNBCommand.classes:
+            for key, value in storage.all().items():
+                if class_name in key:
+                    counter += 1
+        print(counter)
 
 
 def checkInt(command):
