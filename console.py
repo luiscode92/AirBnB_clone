@@ -18,7 +18,7 @@ class HBNBCommand(cmd.Cmd):
 
     """
 
-    intro = 'Hola como estas linda, en que te puedo ayudar?\n'
+    #intro = 'Hola como estas linda, en que te puedo ayudar?\n'
     prompt = '(hbnb) '
 
     classes = ["BaseModel", "User", "State", "City", "Amenity", "Place",
@@ -58,6 +58,15 @@ class HBNBCommand(cmd.Cmd):
             elif 'destroy(' in commands[1]:
                 params = commands[1].split('(')
                 self.do_destroy(commands[0] + ' ' + params[1].split('"')[1])
+            elif 'update(' in commands[1]:
+                params = commands[1].split('(')
+                upt_vals = params[1].split('"')
+                comm_str = " ".join(upt_vals)
+                upt_vals = comm_str.split(')')
+                comm_str = " ".join(upt_vals)
+                upt_vals = comm_str.split(',')
+                #upt_command = commands[0] + ' ' + upt_vals[1] + ' ' + upt_vals[3] + ' ' + upt_vals[5]
+                self.do_update(commands[0] + ' ' + "".join(upt_vals))   
         except:
             pass
 
@@ -152,7 +161,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, args):
         """
         """
-
+        print(args)
         commands = args.split()
         lenght = len(commands)
         flag = 1
