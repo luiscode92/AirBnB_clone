@@ -159,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, args):
         """
         """
-
+        print(args)
         commands = args.split()
         lenght = len(commands)
         flag = 1
@@ -243,18 +243,11 @@ def parser(commands):
     """
 
     params = commands[1].split('(')
-    print("-> despues de eliminar paren ", params)
     upt_vals = params[1].split('"')
-    comm_str = "".join(upt_vals)
-    print("-> despues de eliminar comillas ", comm_str)
+    comm_str = " ".join(upt_vals)
     upt_vals = comm_str.split(')')
     comm_str = "".join(upt_vals)
-    print("-> despues de eliminar paren_cierre ", comm_str)
     upt_vals = comm_str.split(', ')
-
-    print("-> despues de eliminar coma ", upt_vals)
-    print(len(upt_vals))
-    print(*upt_vals, sep=" <-> ")
 
     return upt_vals
 
