@@ -31,11 +31,11 @@ class BaseModel:
 
         del attr_dict['__class__']
         attr_dict['created_at'] = datetime.strptime(
-                attr_dict['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
-            )
+            attr_dict['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
+        )
         attr_dict['updated_at'] = datetime.strptime(
-                attr_dict['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
-            )
+            attr_dict['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
+        )
         for key, value in attr_dict.items():
             setattr(self, key, value)
 

@@ -26,7 +26,7 @@ class FileStorage:
         'Amenity': Amenity,
         'Place': Place,
         'Review': Review
-        }
+    }
 
     def all(self):
         """
@@ -66,3 +66,8 @@ class FileStorage:
                         self.__objects[key] = action[val['__class__']](**val)
         except:
             pass
+
+    def reset(self):
+        """Resets objects dict to empty dictionary"""
+
+        self.__objects = {}

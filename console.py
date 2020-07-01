@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+""" This module defines the class HBcNBCommand"""
 
 import cmd
 import string
@@ -13,12 +13,11 @@ from models.place import Place
 from models.review import Review
 
 
-class HBNBCommand(cmd.Cmd):
+class HBcNBCommand(cmd.Cmd):
+    """
+    The console class for the project
     """
 
-    """
-
-    intro = 'Hola como estas linda, en que te puedo ayudar?\n'
     prompt = '(hbnb) '
 
     classes = ["BaseModel", "User", "State", "City", "Amenity", "Place",
@@ -46,6 +45,10 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def default(self, args):
+        """
+        Defautl function in cmd
+        """
+
         commands = args.split('.')
         try:
             if commands[1] == 'all()':
@@ -58,6 +61,9 @@ class HBNBCommand(cmd.Cmd):
             elif 'destroy(' in commands[1]:
                 params = commands[1].split('(')
                 self.do_destroy(commands[0] + ' ' + params[1].split('"')[1])
+            elif 'update(' in commands[1]:
+                upt_vals = parser(commands)
+                self.do_update(commands[0] + "".join(upt_vals))
         except:
             pass
 
@@ -65,6 +71,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Create a new instance of clas BaseModel and saves it to the JSON file
         """
+
         if not args:
             print('** class name missing **')
             return
@@ -228,6 +235,28 @@ def checkFloat(command):
         return 1
     except:
         return 0
+
+
+def parser(commands):
+    """
+    Function to create a clean string
+    """
+
+    params = commands[1].split('(')
+    print("-> despues de eliminar paren ", params)
+    upt_vals = params[1].split('"')
+    comm_str = "".join(upt_vals)
+    print("-> despues de eliminar comillas ", comm_str)
+    upt_vals = comm_str.split(')')
+    comm_str = "".join(upt_vals)
+    print("-> despues de eliminar paren_cierre ", comm_str)
+    upt_vals = comm_str.split(', ')
+
+    print("-> despues de eliminar coma ", upt_vals)
+    print(len(upt_vals))
+    print(*upt_vals, sep=" <-> ")
+
+    return upt_vals
 
 
 if __name__ == '__main__':
