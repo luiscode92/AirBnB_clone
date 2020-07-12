@@ -30,6 +30,7 @@ button:hover{
 	width: 25%;
 	border-right: 1px solid #DDDDDD;
 	text-align: left;
+	float: left;
 
 }
 
@@ -37,6 +38,7 @@ button:hover{
 	height: 100%;
 	width: 25%;
 	text-align: left;
+	float: left;
 }
 
 h3{
@@ -52,3 +54,31 @@ h4{
 	margin: 5px 50px 0px;
 }
 
+h2{
+	color: black;
+	font-size: 16px;
+	margin: 0px;
+}
+
+li{
+	color: black;
+	list-style-type: none;
+	margin: 10px;
+}
+
+.popover{
+	background-color: #fafafa;
+	width: auto;
+	display: none;	
+	border: #DDDDDD solid 1px;
+	border-radius: 4px;
+	list-style-type: none;
+}
+
+.locations:hover .popover {
+    display: block;
+}
+
+.amenities:hover .popover {
+    display: block;
+}
